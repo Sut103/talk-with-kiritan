@@ -13,5 +13,7 @@ func main() {
 	r.GET("/recognition", controller.GetRecognition)
 	r.POST("/postVoiceText", controller.PostVoiceText)
 
-	r.Run()
+	if err := r.Run(); err != nil {
+		panic(err)
+	}
 }
