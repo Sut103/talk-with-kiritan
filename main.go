@@ -9,10 +9,10 @@ import (
 func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*.html")
-	r.GET("/recognition", recognition)
+	r.GET("/recognition", getRecognition)
 	r.Run()
 }
 
-func recognition(c *gin.Context) {
+func getRecognition(c *gin.Context) {
 	c.HTML(http.StatusOK, "recognition.html", nil)
 }
