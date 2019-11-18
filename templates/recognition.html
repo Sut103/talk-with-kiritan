@@ -3,6 +3,7 @@
     <head lang="jp">
         <meta charset="utf-8">
         <title>talk-with-kiritan</title>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     </head>
 
     <body>
@@ -23,6 +24,9 @@
             recognition.onresult = function(event){
                 let recognitionendVoice=event.results[0][0].transcript
                 console.log(recognitionendVoice)
+                axios.post("http://localhost:8080/postVoiceText",{
+                    text:recognitionendVoice
+                })
             }
         </script>
     </body>
