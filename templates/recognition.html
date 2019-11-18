@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head lang="jp">
+        <meta charset="utf-8">
+        <title>talk-with-kiritan</title>
+    </head>
+
+    <body>
+        <p>●録音中</p>
+        <style>
+            p{
+                color: red;
+                text-align: center;
+            }
+        </style>
+        <script>
+            let recognition = new webkitSpeechRecognition()
+            recognition.lang="ja-JP"
+            recognition.start()
+            recognition.onend = function(event){
+                recognition.start()
+            }
+            recognition.onresult = function(event){
+                let recognitionendVoice=event.results[0][0].transcript
+                console.log(recognitionendVoice)
+            }
+        </script>
+    </body>
+</html>
