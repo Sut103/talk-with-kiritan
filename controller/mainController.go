@@ -23,5 +23,5 @@ func PostVoiceText(c *gin.Context) {
 		panic(err)
 	}
 
-	fmt.Println(voice.Text)
+	fmt.Println("Input text ---> '", voice.Text, "'")
 }
