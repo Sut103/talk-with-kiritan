@@ -16,13 +16,13 @@ var (
 func init() {
 	extension := ".wav"
 	ignoreSymbols := []string{"。", "、", ",", ".", "・", "_", "＿", "!", "！", "?", "？", " ", "　", "…"}
+	fileNames = map[string]string{}
 
 	fmt.Println("Loading sound file ...")
 	files, err := ioutil.ReadDir("sounds")
 	if err != nil {
 		panic(err)
 	}
-
 	for _, file := range files {
 		fileName := file.Name()
 		trimmedFileName := strings.TrimRight(fileName, extension)
@@ -30,12 +30,10 @@ func init() {
 			for _, ignoreSymbol := range ignoreSymbols {
 				trimmedFileName = strings.ReplaceAll(trimmedFileName, ignoreSymbol, "")
 			}
-
-			fileNames := map[string]string{}
 			fileNames[trimmedFileName] = fileName
+
 		}
 	}
-
 	fmt.Println("Sound file was Loaded!")
 }
 
