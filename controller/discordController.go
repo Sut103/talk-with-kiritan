@@ -1,11 +1,14 @@
 package controller
 
 import (
+	"github.com/bwmarrin/dgvoice"
 	"github.com/bwmarrin/discordgo"
 )
 
 type DiscordController struct {
-	VC *discordgo.VoiceConnection
+	VC   *discordgo.VoiceConnection
+	Ch   *chan string
+	Exit *chan string
 }
 
 func GetDiscordController() *DiscordController {
@@ -33,6 +36,10 @@ func (dctrl *DiscordController) MessageRecive(s *discordgo.Session, event *disco
 				panic(err)
 			}
 			s.ChannelMessageSend(discordChannel.ID, "きりたん砲の味噌となれっ!!")
+
+			//音声ファイルのリクエスト受付を開始
+			go playVoiceRoop(s, dctrl)
+
 		}
 	}
 
@@ -41,6 +48,20 @@ func (dctrl *DiscordController) MessageRecive(s *discordgo.Session, event *disco
 		s.ChannelMessageSend(discordChannel.ID, "それでは")
 		if err := dctrl.VC.Disconnect(); err != nil {
 			panic(err)
+		}
+	}
+}
+
+func playVoiceRoop(s *discordgo.Session, dctrl *DiscordController) {
+	for {
+		select {
+		case soundFilename := <-dctrl.Ch:
+			dgvoice.PlayAudioFile(dctrl.VC, "sounds/"+soundFilename, make(<-chan bool))
+
+		case status := <-dctrl.Exit:
+			if status == "exit" {
+				break
+			}
 		}
 	}
 }
