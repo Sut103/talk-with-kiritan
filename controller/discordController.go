@@ -7,12 +7,7 @@ import (
 
 type DiscordController struct {
 	VC   *discordgo.VoiceConnection
-	Ch   *chan string
-	Exit *chan string
-}
-
-func GetDiscordController() *DiscordController {
-	return &DiscordController{}
+	Main *MainController
 }
 
 func (dctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discordgo.MessageCreate) {
@@ -49,16 +44,17 @@ func (dctrl *DiscordController) MessageRecive(s *discordgo.Session, event *disco
 		if err := dctrl.VC.Disconnect(); err != nil {
 			panic(err)
 		}
+		dctrl.Main.Exit <- "exit"
 	}
 }
 
 func playVoiceRoop(s *discordgo.Session, dctrl *DiscordController) {
 	for {
 		select {
-		case soundFilename := <-dctrl.Ch:
+		case soundFilename := <-dctrl.Main.Ch:
 			dgvoice.PlayAudioFile(dctrl.VC, "sounds/"+soundFilename, make(<-chan bool))
 
-		case status := <-dctrl.Exit:
+		case status := <-dctrl.Main.Exit:
 			if status == "exit" {
 				break
 			}
