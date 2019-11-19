@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strings"
-	"talk-with-kiritan/controller"
 
-	"github.com/gin-gonic/gin"
+	"talk-with-kiritan/config"
+	"talk-with-kiritan/router"
 )
 
 var (
@@ -40,12 +40,21 @@ func init() {
 }
 
 func main() {
-	r := gin.Default()
-	r.LoadHTMLGlob("templates/*.html")
+	config, err := config.GetConfig()
+	if err != nil {
+		panic(err)
+	}
 
-	r.GET("/recognition", controller.GetRecognition)
-	r.POST("/postVoiceText", controller.PostVoiceText)
+	dg, err := router.InitDiscord(config.Discord)
+	if err != nil {
+		panic(err)
+	}
 
+	if err = dg.Open(); err != nil {
+		panic(err)
+	}
+
+	r := router.InitServer()
 	if err := r.Run(); err != nil {
 		panic(err)
 	}
