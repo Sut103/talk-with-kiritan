@@ -13,3 +13,6 @@
 
 # go mod
 go.sum
+
+# Other
+sounds/*
