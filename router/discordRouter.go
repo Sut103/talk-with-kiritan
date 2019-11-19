@@ -2,10 +2,15 @@ package router
 
 import "github.com/bwmarrin/discordgo"
 
-func InitDiscord() (*discordgo.Session, error) {
-	dg, err := discordgo.New()
+import "talk-with-kiritan/config"
+
+func InitDiscord(config config.DiscordConfig) (*discordgo.Session, error) {
+	session, err := discordgo.New()
 	if err != nil {
 		return nil, err
 	}
-	return dg, nil
+
+	session.Token = "Bot " + config.Token
+
+	return session, nil
 }

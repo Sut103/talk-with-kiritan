@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"strings"
 
+	"talk-with-kiritan/config"
 	"talk-with-kiritan/router"
 )
 
@@ -39,7 +40,12 @@ func init() {
 }
 
 func main() {
-	dg, err := router.InitDiscord()
+	config, err := config.GetConfig()
+	if err != nil {
+		panic(err)
+	}
+
+	dg, err := router.InitDiscord(config.Discord)
 	if err != nil {
 		panic(err)
 	}
