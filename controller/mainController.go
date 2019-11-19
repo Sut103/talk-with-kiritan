@@ -1,27 +1,20 @@
 package controller
 
-import (
-	"fmt"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
-)
-
-type Voice struct {
-	Text string `form:"text"`
+type MainController struct {
+	Ch   chan string
+	Exit chan string
 }
 
-func GetRecognition(c *gin.Context) {
-	c.HTML(http.StatusOK, "recognition.html", nil)
+func GetDiscordController(mctrl *MainController) *DiscordController {
+	return &DiscordController{Main: mctrl}
 }
 
-func PostVoiceText(c *gin.Context) {
-	voice := Voice{}
+func GetServerController(mctrl *MainController) *ServerController {
+	return &ServerController{Main: mctrl}
+}
 
-	err := c.ShouldBind(&voice)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("Input text ---> '", voice.Text, "'")
+func GetMainController() *MainController {
+	ch := make(chan string)
+	exit := make(chan string)
+	return &MainController{Ch: ch, Exit: exit}
 }

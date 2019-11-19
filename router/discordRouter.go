@@ -7,14 +7,14 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func InitDiscord(config config.DiscordConfig) (*discordgo.Session, error) {
+func InitDiscord(config config.DiscordConfig, mctrl *controller.MainController) (*discordgo.Session, error) {
 	session, err := discordgo.New()
 	if err != nil {
 		return nil, err
 	}
 	session.Token = "Bot " + config.Token
 
-	dctrl := controller.GetDiscordController()
+	dctrl := controller.GetDiscordController(mctrl)
 	session.AddHandler(dctrl.MessageRecive)
 
 	return session, nil
