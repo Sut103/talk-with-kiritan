@@ -6,7 +6,7 @@ Discordのボイスチャットに東北きりたんが参加してる風に演�
 * golang
 * gomodule
 * DiscordBotのトークン(config/config.jsonに書く)
-* soundsフォルダ(再生したい音声ファイルを入れておく(現状.wavのみ))
+* soundsフォルダ(再生したいセリフを入れておく(現状.wavのみ))
 * ffmpeg
 
 ## 使い方
