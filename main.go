@@ -39,6 +39,14 @@ func init() {
 }
 
 func main() {
+	dg, err := router.InitDiscord()
+	if err != nil {
+		panic(err)
+	}
+
+	if err = dg.Open(); err != nil {
+		panic(err)
+	}
 
 	r := router.InitServer()
 	if err := r.Run(); err != nil {
