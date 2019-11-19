@@ -23,7 +23,8 @@ func (dctrl *DiscordController) MessageRecive(s *discordgo.Session, event *disco
 		panic(err)
 	}
 
-	if event.Content == "きりたん砲全門斉射！" { //VC参加
+	//VC参加
+	if event.Content == "きりたん砲全門斉射！" {
 		for _, vs := range discordGuild.VoiceStates {
 			if vs.UserID == event.Author.ID {
 				dctrl.VC, err = s.ChannelVoiceJoin(discordGuild.ID, vs.ChannelID, false, true)
@@ -32,6 +33,14 @@ func (dctrl *DiscordController) MessageRecive(s *discordgo.Session, event *disco
 				panic(err)
 			}
 			s.ChannelMessageSend(discordChannel.ID, "きりたん砲の味噌となれっ!!")
+		}
+	}
+
+	//VC退出
+	if event.Content == "おつかれさまです" {
+		s.ChannelMessageSend(discordChannel.ID, "それでは")
+		if err := dctrl.VC.Disconnect(); err != nil {
+			panic(err)
 		}
 	}
 }
