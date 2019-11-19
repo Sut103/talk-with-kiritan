@@ -9,7 +9,7 @@ type DiscordConfig struct {
 	Token string `json:"token"`
 }
 type Config struct {
-	Discord DiscordConfig `json:"discord"`
+	Discord DiscordConfig `json:"session"`
 }
 
 func GetConfig() (Config, error) {
