@@ -20,5 +20,6 @@ func (mctrl *MainController) GetServerController() *ServerController {
 func GetMainController() *MainController {
 	ch := make(chan string)
 	exit := make(chan string)
-	return &MainController{Ch: ch, Exit: exit}
+	vchs := VoiceChannels{Ch: ch, Exit: exit}
+	return &MainController{vchs}
 }

@@ -44,17 +44,17 @@ func (dctrl *DiscordController) MessageRecive(s *discordgo.Session, event *disco
 		if err := dctrl.VC.Disconnect(); err != nil {
 			panic(err)
 		}
-		dctrl.Main.Exit <- "exit"
+		dctrl.Main.VChs.Exit <- "exit"
 	}
 }
 
 func playVoiceRoop(s *discordgo.Session, dctrl *DiscordController) {
 	for {
 		select {
-		case soundFilename := <-dctrl.Main.Ch:
+		case soundFilename := <-dctrl.Main.VChs.Ch:
 			dgvoice.PlayAudioFile(dctrl.VC, "sounds/"+soundFilename, make(<-chan bool))
 
-		case status := <-dctrl.Main.Exit:
+		case status := <-dctrl.Main.VChs.Exit:
 			if status == "exit" {
 				break
 			}

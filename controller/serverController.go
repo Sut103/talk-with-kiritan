@@ -31,7 +31,7 @@ func (sctrl *ServerController) PostVoiceText(c *gin.Context) {
 	fmt.Println("Input text ---> '", voice.Text, "'")
 
 	if fileName, ok := sctrl.FileNames[voice.Text]; ok {
-		sctrl.Main.Ch <- fileName
+		sctrl.Main.VChs.Ch <- fileName
 	}
 
 }
