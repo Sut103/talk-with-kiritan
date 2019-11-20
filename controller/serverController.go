@@ -16,11 +16,11 @@ type Voice struct {
 	Text string `form:"text"`
 }
 
-func (sctrl *ServerController) GetRecognition(c *gin.Context) {
+func (ctrl *ServerController) GetRecognition(c *gin.Context) {
 	c.HTML(http.StatusOK, "recognition.html", nil)
 }
 
-func (sctrl *ServerController) PostVoiceText(c *gin.Context) {
+func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
 	voice := Voice{}
 
 	err := c.ShouldBind(&voice)
@@ -30,8 +30,8 @@ func (sctrl *ServerController) PostVoiceText(c *gin.Context) {
 
 	fmt.Println("Input text ---> '", voice.Text, "'")
 
-	if fileName, ok := sctrl.FileNames[voice.Text]; ok {
-		sctrl.Main.Ch <- fileName
+	if fileName, ok := ctrl.FileNames[voice.Text]; ok {
+		ctrl.Main.VChs.Ch <- fileName
 	}
 
 }

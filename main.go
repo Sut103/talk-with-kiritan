@@ -1,42 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
-	"strings"
-
 	"talk-with-kiritan/config"
-	"talk-with-kiritan/controller"
 	"talk-with-kiritan/router"
 )
-
-var (
-	fileNames map[string]string //トリミングしたファイル名と元のファイル名
-)
-
-func init() {
-	extension := ".wav"
-	ignoreSymbols := []string{"。", "、", ",", ".", "・", "_", "＿", "!", "！", "?", "？", " ", "　", "…"}
-	fileNames = map[string]string{}
-
-	fmt.Println("Loading sound file ...")
-	files, err := ioutil.ReadDir("sounds")
-	if err != nil {
-		panic(err)
-	}
-	for _, file := range files {
-		fileName := file.Name()
-		trimmedFileName := strings.TrimRight(fileName, extension)
-		if trimmedFileName+extension == fileName { // 拡張子のバリデーション
-			for _, ignoreSymbol := range ignoreSymbols {
-				trimmedFileName = strings.ReplaceAll(trimmedFileName, ignoreSymbol, "")
-			}
-			fileNames[trimmedFileName] = fileName
-
-		}
-	}
-	fmt.Println("Sound file was Loaded!")
-}
 
 func main() {
 	config, err := config.GetConfig()
@@ -44,9 +11,7 @@ func main() {
 		panic(err)
 	}
 
-	mctrl := controller.GetMainController()
-
-	dg, err := router.InitDiscord(config.Discord, mctrl)
+	dg, r, err := router.InitMainRouter(config)
 	if err != nil {
 		panic(err)
 	}
@@ -55,7 +20,6 @@ func main() {
 		panic(err)
 	}
 
-	r := router.InitServer(fileNames, mctrl)
 	if err := r.Run(); err != nil {
 		panic(err)
 	}
