@@ -1,6 +1,10 @@
 package controller
 
 type MainController struct {
+	VChs VoiceChannels
+}
+
+type VoiceChannels struct {
 	Ch   chan string
 	Exit chan string
 }
