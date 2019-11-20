@@ -15,7 +15,7 @@
             }
         </style>
         <script>
-            let recognition = new webkitSpeechRecognition()
+            const recognition = new webkitSpeechRecognition()
             recognition.lang="ja-JP"
             recognition.start()
             recognition.onend = function(event){
