@@ -14,8 +14,8 @@ func InitDiscordRouter(config config.DiscordConfig, mctrl *controller.MainContro
 	}
 	session.Token = "Bot " + config.Token
 
-	dctrl := controller.GetDiscordController(mctrl)
-	session.AddHandler(dctrl.MessageRecive)
+	ctrl := mctrl.GetDiscordController()
+	session.AddHandler(ctrl.MessageRecive)
 
 	return session, nil
 }

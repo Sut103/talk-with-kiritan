@@ -9,11 +9,11 @@ type VoiceChannels struct {
 	Exit chan string
 }
 
-func GetDiscordController(mctrl *MainController) *DiscordController {
+func (mctrl *MainController) GetDiscordController() *DiscordController {
 	return &DiscordController{Main: mctrl}
 }
 
-func GetServerController(mctrl *MainController) *ServerController {
+func (mctrl *MainController) GetServerController() *ServerController {
 	return &ServerController{Main: mctrl}
 }
 

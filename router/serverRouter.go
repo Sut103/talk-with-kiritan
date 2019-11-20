@@ -11,7 +11,7 @@ func InitServerRouter(fileNames map[string]string, mctrl *controller.MainControl
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*.html")
 
-	ctrl := controller.GetServerController(mctrl)
+	ctrl := mctrl.GetServerController()
 	ctrl.FileNames = fileNames
 
 	r.GET("/recognition", ctrl.GetRecognition)
