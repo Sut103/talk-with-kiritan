@@ -5,6 +5,10 @@ import (
 	"io/ioutil"
 	"strings"
 	"talk-with-kiritan/config"
+	"talk-with-kiritan/controller"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -33,4 +37,17 @@ func init() {
 		}
 	}
 	fmt.Println("Sound file was Loaded!")
+}
+
+func InitMainRouter(config config.Config) (*discordgo.Session, *gin.Engine, error) {
+	ctrl := controller.GetMainController()
+
+	dg, err := InitDiscord(config.Discord, ctrl)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	g := InitServer(fileNames, ctrl)
+
+	return dg, g, err
 }

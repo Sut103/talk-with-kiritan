@@ -2,7 +2,6 @@ package main
 
 import (
 	"talk-with-kiritan/config"
-	"talk-with-kiritan/controller"
 	"talk-with-kiritan/router"
 )
 
@@ -12,9 +11,7 @@ func main() {
 		panic(err)
 	}
 
-	mctrl := controller.GetMainController()
-
-	dg, err := router.InitDiscord(config.Discord, mctrl)
+	dg, r, err := router.InitMainRouter(config)
 	if err != nil {
 		panic(err)
 	}
@@ -23,7 +20,6 @@ func main() {
 		panic(err)
 	}
 
-	r := router.InitServer(fileNames, mctrl)
 	if err := r.Run(); err != nil {
 		panic(err)
 	}
