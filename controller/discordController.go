@@ -33,7 +33,7 @@ func (ctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discor
 			s.ChannelMessageSend(discordChannel.ID, "きりたん砲の味噌となれっ!!")
 
 			//音声ファイルのリクエスト受付を開始
-			go playVoiceRoop(s, ctrl)
+			go playAudioLoop(s, ctrl)
 
 		}
 	}
@@ -48,7 +48,7 @@ func (ctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discor
 	}
 }
 
-func playVoiceRoop(s *discordgo.Session, ctrl *DiscordController) {
+func playAudioLoop(s *discordgo.Session, ctrl *DiscordController) {
 	for {
 		select {
 		case soundFilename := <-ctrl.Main.VChs.Ch:
