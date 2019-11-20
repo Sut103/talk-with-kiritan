@@ -42,12 +42,12 @@ func init() {
 func InitMainRouter(config config.Config) (*discordgo.Session, *gin.Engine, error) {
 	ctrl := controller.GetMainController()
 
-	dg, err := InitDiscord(config.Discord, ctrl)
+	dg, err := InitDiscordRouter(config.Discord, ctrl)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	g := InitServer(fileNames, ctrl)
+	g := InitServerRouter(fileNames, ctrl)
 
 	return dg, g, err
 }

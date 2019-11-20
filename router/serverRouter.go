@@ -7,7 +7,7 @@ import (
 )
 
 // InitServer サーバの初期化
-func InitServer(fileNames map[string]string, mctrl *controller.MainController) *gin.Engine {
+func InitServerRouter(fileNames map[string]string, mctrl *controller.MainController) *gin.Engine {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*.html")
 
