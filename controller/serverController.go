@@ -2,14 +2,16 @@ package controller
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 type ServerController struct {
-	Main      *MainController
-	FileNames map[string]string
+	Main        *MainController
+	LoadedFiles map[string][]string
 }
 
 type Voice struct {
@@ -30,8 +32,16 @@ func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
 
 	fmt.Println("Input text ---> '", voice.Text, "'")
 
-	if fileName, ok := ctrl.FileNames[voice.Text]; ok {
-		ctrl.Main.VChs.Ch <- fileName
+	if fileNames, ok := ctrl.LoadedFiles[voice.Text]; ok {
+		count := len(fileNames)
+		rand.Seed(time.Now().UnixNano())
+
+		randNum := 0
+		if count != 1 {
+			randNum = rand.Intn(count - 1)
+		}
+
+		ctrl.Main.VChs.Ch <- fileNames[randNum]
 	}
 
 }

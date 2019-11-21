@@ -7,12 +7,12 @@ import (
 )
 
 // InitServer サーバの初期化
-func InitServerRouter(fileNames map[string]string, mctrl *controller.MainController) *gin.Engine {
+func InitServerRouter(loadedFiles map[string][]string, mctrl *controller.MainController) *gin.Engine {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*.html")
 
 	ctrl := mctrl.GetServerController()
-	ctrl.FileNames = fileNames
+	ctrl.LoadedFiles = loadedFiles
 
 	r.GET("/recognition", ctrl.GetRecognition)
 	r.POST("/postVoiceText", ctrl.PostVoiceText)
