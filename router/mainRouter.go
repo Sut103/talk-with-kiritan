@@ -14,7 +14,7 @@ import (
 func InitMainRouter(config config.Config) (*discordgo.Session, *gin.Engine, error) {
 	ctrl := controller.GetMainController()
 
-	fileNames, err := loadAudioFiles(config)
+	loadedFiles, err := loadAudioFiles(config)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -24,15 +24,15 @@ func InitMainRouter(config config.Config) (*discordgo.Session, *gin.Engine, erro
 		return nil, nil, err
 	}
 
-	g := InitServerRouter(fileNames, ctrl)
+	g := InitServerRouter(loadedFiles, ctrl)
 
 	return dg, g, err
 }
 
-func loadAudioFiles(config config.Config) (map[string]string, error) {
+func loadAudioFiles(config config.Config) (map[string][]string, error) {
 	extension := ".wav"
 	ignoreSymbols := []string{"。", "、", ",", ".", "・", "_", "＿", "!", "！", "?", "？", " ", "　", "…"}
-	fileNames := map[string]string{}
+	loadedFiles := map[string][]string{}
 
 	fmt.Println("Loading sound file ...")
 	files, err := ioutil.ReadDir("sounds")
@@ -47,11 +47,11 @@ func loadAudioFiles(config config.Config) (map[string]string, error) {
 			for _, ignoreSymbol := range ignoreSymbols {
 				trimmedFileName = strings.ReplaceAll(trimmedFileName, ignoreSymbol, "")
 			}
-			fileNames[trimmedFileName] = fileName
+			loadedFiles[trimmedFileName] = append(loadedFiles[trimmedFileName], fileName)
 
 		}
 	}
 	fmt.Println("Sound file was Loaded!")
 
-	return fileNames, nil
+	return loadedFiles, nil
 }
