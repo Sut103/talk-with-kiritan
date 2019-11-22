@@ -31,7 +31,6 @@ func InitMainRouter(config config.Config) (*discordgo.Session, *gin.Engine, erro
 
 func loadAudioFiles(config config.Config) (map[string][]string, error) {
 	extension := ".wav"
-	ignoreSymbols := []string{"。", "、", ",", ".", "・", "_", "＿", "!", "！", "?", "？", " ", "　", "…"}
 	loadedFiles := map[string][]string{}
 
 	fmt.Println("Loading sound file ...")
@@ -44,11 +43,7 @@ func loadAudioFiles(config config.Config) (map[string][]string, error) {
 		fileName := file.Name()
 		trimmedFileName := strings.TrimRight(fileName, extension)
 		if trimmedFileName+extension == fileName { // 拡張子のバリデーション
-			for _, ignoreSymbol := range ignoreSymbols {
-				trimmedFileName = strings.ReplaceAll(trimmedFileName, ignoreSymbol, "")
-			}
 			loadedFiles[trimmedFileName] = append(loadedFiles[trimmedFileName], fileName)
-
 		}
 	}
 	fmt.Println("Sound file was Loaded!")
