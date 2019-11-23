@@ -60,6 +60,14 @@ func (t TaggerNode) allowAdd() bool {
 		return false
 	}
 
+	if t.PartsOfSpeech == "接頭詞" {
+		return false
+	}
+
+	if t.Origin == "*" {
+		return false
+	}
+
 	return true
 }
 
