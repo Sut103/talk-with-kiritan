@@ -6,6 +6,10 @@ Discordのボイスチャットに東北きりたんが参加してる風に演�
 * golang
     * gomodule
 * ffmpeg
+* mecab
+    * 環境変数が必要
+        * ```export CGO_CFLAGS="-I/path/to/include"```
+        * ```export CGO_LDFLAGS="-L/path/to/lib -lmecab -lstdc++"```
 * DiscordBotのトークン
 * soundsフォルダ
     * 再生したい音声ファイル.wav
@@ -14,6 +18,7 @@ Discordのボイスチャットに東北きりたんが参加してる風に演�
 1. Discordで事前にBotを登録し、config.jsonにトークンを書いておく
 2. ./soundsに音声ファイルを入れておく
 3. ```$ go run main.go```で起動
+    * あるいはDockerfileでbuild＆run
 4. DiscordでVCに入る
 5. チャットにきりたん砲全門斉射！と書く
     * Botが入ってくる
