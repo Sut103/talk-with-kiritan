@@ -1,12 +1,11 @@
 package controller
 
 type MainController struct {
-	VChs VoiceChannels
+	VChs VoiceConnection
 }
 
-type VoiceChannels struct {
-	Ch   chan string
-	Exit chan string
+type VoiceConnection struct {
+	Ch chan string
 }
 
 func (mctrl *MainController) GetDiscordController() *DiscordController {
@@ -19,7 +18,6 @@ func (mctrl *MainController) GetServerController() *ServerController {
 
 func GetMainController() *MainController {
 	ch := make(chan string)
-	exit := make(chan string)
-	vchs := VoiceChannels{Ch: ch, Exit: exit}
+	vchs := VoiceConnection{Ch: ch}
 	return &MainController{vchs}
 }
