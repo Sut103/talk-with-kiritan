@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"sort"
 	"talk-with-kiritan/preprocessing"
 	"time"
 
@@ -38,6 +39,8 @@ func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
 		panic(err)
 	}
 
+	sort.Slice(keys, func(i, j int) bool { return len(keys[i]) > len(keys[j]) })
+
 	for _, key := range keys {
 		if fileNames, ok := ctrl.LoadedFiles[key]; ok {
 			count := len(fileNames)
@@ -52,5 +55,4 @@ func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
 			break
 		}
 	}
-
 }
