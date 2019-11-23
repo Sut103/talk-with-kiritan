@@ -55,6 +55,7 @@ func loadAudioFiles(config config.Config) (map[string][]string, error) {
 		}
 	}
 	fmt.Println("Sound file was Loaded!")
+	fmt.Printf("%d keys", len(loadedFiles))
 
 	return loadedFiles, nil
 }
