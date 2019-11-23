@@ -59,6 +59,12 @@ func loadAudioFiles(config config.Config) (map[string][]string, error) {
 	return loadedFiles, nil
 }
 
+type TaggerNode struct {
+	Surface       string
+	PartsOfSpeech string
+	Origin        string
+}
+
 func getKeys(fileName string) ([]string, error) {
 	tagger, err := mecab.New(map[string]string{})
 	if err != nil {
@@ -74,35 +80,45 @@ func getKeys(fileName string) ([]string, error) {
 	keys := []string{}
 	result = result.Next()
 	for ; !result.Next().IsZero(); result = result.Next() {
-		feature := result.Feature()
-		if allowAdd(feature) {
-			keys = append(keys, getOrigin(feature))
+		resultStruct := nodeToStruct(result)
+		if resultStruct.allowAdd() {
+			keys = append(keys, resultStruct.getOrigin())
 	}
 	}
 
 	return keys, nil
 }
 
-func allowAdd(feature string) bool {
-	splitedFeature := strings.Split(feature, ",")
+func (t TaggerNode) allowAdd() bool {
 
-	if splitedFeature[0] == "記号" {
+	if t.PartsOfSpeech == "記号" {
 		return false
 	}
 
-	if splitedFeature[0] == "助動詞" {
+	if t.PartsOfSpeech == "助動詞" {
 		return false
 	}
 
-	if splitedFeature[0] == "助詞" {
+	if t.PartsOfSpeech == "助詞" {
 		return false
 	}
 
 	return true
 }
 
-func getOrigin(feature string) string {
-	splitedFeature := strings.Split(feature, ",")
+func (t TaggerNode) getOrigin() string {
+	return t.Origin
+}
 
-	return splitedFeature[6]
+func nodeToStruct(node mecab.Node) TaggerNode {
+	ret := TaggerNode{}
+
+	ret.Surface = node.Surface()
+
+	feature := node.Feature()
+	splitedFeature := strings.Split(feature, ",")
+	ret.PartsOfSpeech = splitedFeature[0]
+	ret.Origin = splitedFeature[6]
+
+	return ret
 }
