@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"talk-with-kiritan/preprocessing"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -32,16 +33,24 @@ func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
 
 	fmt.Println("Input text ---> '", voice.Text, "'")
 
-	if fileNames, ok := ctrl.LoadedFiles[voice.Text]; ok {
-		count := len(fileNames)
-		rand.Seed(time.Now().UnixNano())
+	keys, err := preprocessing.GetKeys(voice.Text)
+	if err != nil {
+		panic(err)
+	}
 
-		randNum := 0
-		if count != 1 {
-			randNum = rand.Intn(count - 1)
+	for _, key := range keys {
+		if fileNames, ok := ctrl.LoadedFiles[key]; ok {
+			count := len(fileNames)
+			rand.Seed(time.Now().UnixNano())
+
+			randNum := 0
+			if count != 1 {
+				randNum = rand.Intn(count - 1)
+			}
+
+			ctrl.Main.VChs.Ch <- fileNames[randNum]
+			break
 		}
-
-		ctrl.Main.VChs.Ch <- fileNames[randNum]
 	}
 
 }
