@@ -6,6 +6,7 @@ import (
 	"strings"
 	"talk-with-kiritan/config"
 	"talk-with-kiritan/controller"
+	"talk-with-kiritan/preprocessing"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/gin-gonic/gin"
@@ -31,7 +32,6 @@ func InitMainRouter(config config.Config) (*discordgo.Session, *gin.Engine, erro
 
 func loadAudioFiles(config config.Config) (map[string][]string, error) {
 	extension := ".wav"
-	ignoreSymbols := []string{"。", "、", ",", ".", "・", "_", "＿", "!", "！", "?", "？", " ", "　", "…"}
 	loadedFiles := map[string][]string{}
 
 	fmt.Println("Loading sound file ...")
@@ -44,14 +44,18 @@ func loadAudioFiles(config config.Config) (map[string][]string, error) {
 		fileName := file.Name()
 		trimmedFileName := strings.TrimRight(fileName, extension)
 		if trimmedFileName+extension == fileName { // 拡張子のバリデーション
-			for _, ignoreSymbol := range ignoreSymbols {
-				trimmedFileName = strings.ReplaceAll(trimmedFileName, ignoreSymbol, "")
+			keys, err := preprocessing.GetKeys(trimmedFileName)
+			if err != nil {
+				return nil, err
 			}
-			loadedFiles[trimmedFileName] = append(loadedFiles[trimmedFileName], fileName)
 
+			for _, key := range keys {
+				loadedFiles[key] = append(loadedFiles[key], fileName)
+			}
 		}
 	}
 	fmt.Println("Sound file was Loaded!")
+	fmt.Printf("%d keys", len(loadedFiles))
 
 	return loadedFiles, nil
 }
