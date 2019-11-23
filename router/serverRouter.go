@@ -14,8 +14,14 @@ func InitServerRouter(loadedFiles map[string][]string, mctrl *controller.MainCon
 	ctrl := mctrl.GetServerController()
 	ctrl.LoadedFiles = loadedFiles
 
-	r.GET("/recognition", ctrl.GetRecognition)
-	r.POST("/postVoiceText", ctrl.PostVoiceText)
+	auth := r.Group("/", gin.BasicAuth(gin.Accounts{
+		"tohoku": "zunko",
+	}))
 
+	root := auth.Group("/")
+	{
+		root.GET("/recognition", ctrl.GetRecognition)
+		root.POST("/postVoiceText", ctrl.PostVoiceText)
+	}
 	return r
 }
