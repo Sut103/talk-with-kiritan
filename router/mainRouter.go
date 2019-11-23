@@ -9,6 +9,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/gin-gonic/gin"
+	mecab "github.com/shogo82148/go-mecab"
 )
 
 func InitMainRouter(config config.Config) (*discordgo.Session, *gin.Engine, error) {
@@ -49,4 +50,25 @@ func loadAudioFiles(config config.Config) (map[string][]string, error) {
 	fmt.Println("Sound file was Loaded!")
 
 	return loadedFiles, nil
+}
+
+func getKeys(fileName string) ([]string, error) {
+	tagger, err := mecab.New(map[string]string{})
+	if err != nil {
+		return nil, err
+	}
+	defer tagger.Destroy()
+
+	result, err := tagger.ParseToNode(fileName)
+	if err != nil {
+		return nil, err
+	}
+
+	keys := []string{}
+	result = result.Next()
+	for ; !result.IsZero(); result = result.Next() {
+		keys = append(keys, result.Surface())
+	}
+
+	return keys, nil
 }
