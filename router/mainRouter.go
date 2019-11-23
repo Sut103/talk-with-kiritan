@@ -67,8 +67,9 @@ func getKeys(fileName string) ([]string, error) {
 	keys := []string{}
 	result = result.Next()
 	for ; !result.Next().IsZero(); result = result.Next() {
-		if allowAdd(result.Feature()) {
-		keys = append(keys, result.Surface())
+		feature := result.Feature()
+		if allowAdd(feature) {
+			keys = append(keys, getOrigin(feature))
 	}
 	}
 
@@ -91,4 +92,10 @@ func allowAdd(feature string) bool {
 	}
 
 	return true
+}
+
+func getOrigin(feature string) string {
+	splitedFeature := strings.Split(feature, ",")
+
+	return splitedFeature[6]
 }
