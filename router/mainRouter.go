@@ -66,7 +66,7 @@ func getKeys(fileName string) ([]string, error) {
 
 	keys := []string{}
 	result = result.Next()
-	for ; !result.IsZero(); result = result.Next() {
+	for ; !result.Next().IsZero(); result = result.Next() {
 		keys = append(keys, result.Surface())
 	}
 
