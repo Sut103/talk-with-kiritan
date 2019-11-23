@@ -67,8 +67,28 @@ func getKeys(fileName string) ([]string, error) {
 	keys := []string{}
 	result = result.Next()
 	for ; !result.Next().IsZero(); result = result.Next() {
+		if allowAdd(result.Feature()) {
 		keys = append(keys, result.Surface())
+	}
 	}
 
 	return keys, nil
+}
+
+func allowAdd(feature string) bool {
+	splitedFeature := strings.Split(feature, ",")
+
+	if splitedFeature[0] == "記号" {
+		return false
+	}
+
+	if splitedFeature[0] == "助動詞" {
+		return false
+	}
+
+	if splitedFeature[0] == "助詞" {
+		return false
+	}
+
+	return true
 }
