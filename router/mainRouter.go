@@ -44,7 +44,14 @@ func loadAudioFiles(config config.Config) (map[string][]string, error) {
 		fileName := file.Name()
 		trimmedFileName := strings.TrimRight(fileName, extension)
 		if trimmedFileName+extension == fileName { // 拡張子のバリデーション
-			loadedFiles[trimmedFileName] = append(loadedFiles[trimmedFileName], fileName)
+			keys, err := getKeys(trimmedFileName)
+			if err != nil {
+				return nil, err
+			}
+
+			for _, key := range keys {
+				loadedFiles[key] = append(loadedFiles[key], fileName)
+			}
 		}
 	}
 	fmt.Println("Sound file was Loaded!")
