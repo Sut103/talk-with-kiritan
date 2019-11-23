@@ -6,8 +6,9 @@ import (
 )
 
 type DiscordController struct {
-	VC   *discordgo.VoiceConnection
-	Main *MainController
+	VC    *discordgo.VoiceConnection
+	Main  *MainController
+	close chan bool
 }
 
 func (ctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discordgo.MessageCreate) {
@@ -44,7 +45,7 @@ func (ctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discor
 		if err := ctrl.VC.Disconnect(); err != nil {
 			panic(err)
 		}
-		ctrl.Main.VChs.Exit <- "exit"
+		ctrl.close <- true
 	}
 }
 
@@ -54,10 +55,8 @@ func playAudioLoop(s *discordgo.Session, ctrl *DiscordController) {
 		case soundFilename := <-ctrl.Main.VChs.Ch:
 			dgvoice.PlayAudioFile(ctrl.VC, "sounds/"+soundFilename, make(<-chan bool))
 
-		case status := <-ctrl.Main.VChs.Exit:
-			if status == "exit" {
-				break
-			}
+		case <-ctrl.close:
+			break
 		}
 	}
 }
