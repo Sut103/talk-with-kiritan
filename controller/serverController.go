@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"net/http"
 	"sort"
+	"strings"
 	"talk-with-kiritan/preprocessing"
 	"time"
 
@@ -25,34 +26,38 @@ func (ctrl *ServerController) GetRecognition(c *gin.Context) {
 }
 
 func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
-	voice := Voice{}
+	if ctrl.Main.Clock {
+		voice := Voice{}
 
-	err := c.ShouldBind(&voice)
-	if err != nil {
-		panic(err)
-	}
+		err := c.ShouldBind(&voice)
+		if err != nil {
+			panic(err)
+		}
 
-	fmt.Println("Input text ---> '", voice.Text, "'")
+		fmt.Println("Input text ---> '", voice.Text, "'")
 
-	keys, err := preprocessing.GetKeys(voice.Text)
-	if err != nil {
-		panic(err)
-	}
+		vtext := strings.ReplaceAll(voice.Text, " ", "")
+		keys, err := preprocessing.GetKeys(vtext)
+		if err != nil {
+			panic(err)
+		}
 
-	sort.Slice(keys, func(i, j int) bool { return len(keys[i]) > len(keys[j]) })
+		sort.Slice(keys, func(i, j int) bool { return len(keys[i]) > len(keys[j]) })
 
-	for _, key := range keys {
-		if fileNames, ok := ctrl.LoadedFiles[key]; ok {
-			count := len(fileNames)
-			rand.Seed(time.Now().UnixNano())
+		for _, key := range keys {
+			if fileNames, ok := ctrl.LoadedFiles[key]; ok {
+				count := len(fileNames)
+				rand.Seed(time.Now().UnixNano())
 
-			randNum := 0
-			if count != 1 {
-				randNum = rand.Intn(count - 1)
+				randNum := 0
+				if count != 1 {
+					randNum = rand.Intn(count - 1)
+				}
+
+				ctrl.Main.VChs.Ch <- fileNames[randNum]
+				ctrl.Main.Clock = false
+				break
 			}
-
-			ctrl.Main.VChs.Ch <- fileNames[randNum]
-			break
 		}
 	}
 }
