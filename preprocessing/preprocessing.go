@@ -9,7 +9,14 @@ import (
 type TaggerNode struct {
 	Surface       string
 	PartsOfSpeech string
+	Subcategory1  string
+	Subcategory2  string
+	Subcategory3  string
+	Utilization   string
+	Pratical      string
 	Origin        string
+	Reading       string
+	Pronunciation string
 }
 
 func GetKeys(fileName string) ([]string, error) {
@@ -81,13 +88,23 @@ func (t TaggerNode) getSurface() string {
 
 func nodeToStruct(node mecab.Node) TaggerNode {
 	ret := TaggerNode{}
-
 	ret.Surface = node.Surface()
 
 	feature := node.Feature()
 	splitedFeature := strings.Split(feature, ",")
+
 	ret.PartsOfSpeech = splitedFeature[0]
+	ret.Subcategory1 = splitedFeature[1]
+	ret.Subcategory2 = splitedFeature[2]
+	ret.Subcategory3 = splitedFeature[3]
+	ret.Utilization = splitedFeature[4]
+	ret.Pratical = splitedFeature[5]
 	ret.Origin = splitedFeature[6]
+	// 発音と読みがないことがあるため
+	if !(len(splitedFeature) < 8) {
+		ret.Reading = splitedFeature[7]
+		ret.Pronunciation = splitedFeature[8]
+	}
 
 	return ret
 }
