@@ -7,7 +7,6 @@ import (
 	"talk-with-kiritan/config"
 	"talk-with-kiritan/controller"
 	"talk-with-kiritan/preprocessing"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/gin-gonic/gin"
@@ -15,8 +14,6 @@ import (
 
 func InitMainRouter(config config.Config) (*discordgo.Session, *gin.Engine, error) {
 	ctrl := controller.GetMainController()
-
-	go clock(ctrl)
 
 	loadedFiles, err := loadAudioFiles(config)
 	if err != nil {
@@ -61,14 +58,4 @@ func loadAudioFiles(config config.Config) (map[string][]string, error) {
 	fmt.Printf("%d keys", len(loadedFiles))
 
 	return loadedFiles, nil
-}
-
-func clock(ctrl *controller.MainController) {
-	for {
-		ctrl.Timer.Lock.Lock()
-		ctrl.Timer.AllowSend = true
-		ctrl.Timer.Lock.Unlock()
-
-		time.Sleep(time.Second * 45)
-	}
 }

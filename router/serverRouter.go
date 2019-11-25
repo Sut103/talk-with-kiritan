@@ -2,6 +2,7 @@ package router
 
 import (
 	"talk-with-kiritan/controller"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,5 +24,18 @@ func InitServerRouter(loadedFiles map[string][]string, mctrl *controller.MainCon
 		root.GET("/recognition", ctrl.GetRecognition)
 		root.POST("/postVoiceText", ctrl.PostVoiceText)
 	}
+
+	go clock(ctrl)
+
 	return r
+}
+
+func clock(ctrl *controller.ServerController) {
+	for {
+		ctrl.Timer.Lock.Lock()
+		ctrl.Timer.AllowSend = true
+		ctrl.Timer.Lock.Unlock()
+
+		time.Sleep(time.Second * 45)
+	}
 }

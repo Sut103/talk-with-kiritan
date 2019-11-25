@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"sort"
 	"strings"
+	"sync"
 	"talk-with-kiritan/preprocessing"
 	"time"
 
@@ -15,6 +16,12 @@ import (
 type ServerController struct {
 	Main        *MainController
 	LoadedFiles map[string][]string
+	Timer       Timer
+}
+
+type Timer struct {
+	AllowSend bool
+	Lock      sync.Mutex
 }
 
 type Voice struct {
@@ -26,7 +33,7 @@ func (ctrl *ServerController) GetRecognition(c *gin.Context) {
 }
 
 func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
-	if ctrl.Main.Timer.AllowSend {
+	if ctrl.Timer.AllowSend {
 		voice := Voice{}
 
 		err := c.ShouldBind(&voice)
@@ -56,9 +63,9 @@ func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
 
 				ctrl.Main.VChs.Ch <- fileNames[randNum]
 
-				ctrl.Main.Timer.Lock.Lock()
-				ctrl.Main.Timer.AllowSend = false
-				ctrl.Main.Timer.Lock.Unlock()
+				ctrl.Timer.Lock.Lock()
+				ctrl.Timer.AllowSend = false
+				ctrl.Timer.Lock.Unlock()
 				break
 			}
 		}

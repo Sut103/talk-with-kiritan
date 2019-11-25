@@ -1,19 +1,11 @@
 package controller
 
-import "sync"
-
 type MainController struct {
-	VChs  VoiceConnection
-	Timer Timer
+	VChs VoiceConnection
 }
 
 type VoiceConnection struct {
 	Ch chan string
-}
-
-type Timer struct {
-	AllowSend bool
-	Lock      sync.Mutex
 }
 
 func (mctrl *MainController) GetDiscordController() *DiscordController {
@@ -27,6 +19,5 @@ func (mctrl *MainController) GetServerController() *ServerController {
 func GetMainController() *MainController {
 	ch := make(chan string)
 	vchs := VoiceConnection{Ch: ch}
-	timer := Timer{}
-	return &MainController{VChs: vchs, Timer: timer}
+	return &MainController{VChs: vchs}
 }
