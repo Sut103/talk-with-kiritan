@@ -1,7 +1,8 @@
 package controller
 
 type MainController struct {
-	VChs VoiceConnection
+	VChs  VoiceConnection
+	Clock bool
 }
 
 type VoiceConnection struct {
@@ -19,5 +20,6 @@ func (mctrl *MainController) GetServerController() *ServerController {
 func GetMainController() *MainController {
 	ch := make(chan string)
 	vchs := VoiceConnection{Ch: ch}
-	return &MainController{vchs}
+	clock := false
+	return &MainController{VChs: vchs, Clock: clock}
 }
