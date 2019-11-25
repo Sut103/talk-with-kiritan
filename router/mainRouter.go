@@ -16,7 +16,7 @@ import (
 func InitMainRouter(config config.Config) (*discordgo.Session, *gin.Engine, error) {
 	ctrl := controller.GetMainController()
 
-	go Clock(ctrl)
+	go clock(ctrl)
 
 	loadedFiles, err := loadAudioFiles(config)
 	if err != nil {
@@ -63,9 +63,12 @@ func loadAudioFiles(config config.Config) (map[string][]string, error) {
 	return loadedFiles, nil
 }
 
-func Clock(ctrl *controller.MainController) {
+func clock(ctrl *controller.MainController) {
 	for {
+		ctrl.Timer.Lock.Lock()
+		ctrl.Timer.AllowSend = true
+		ctrl.Timer.Lock.Unlock()
+
 		time.Sleep(time.Second * 45)
-		ctrl.Clock = true
 	}
 }

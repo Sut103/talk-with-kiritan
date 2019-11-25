@@ -26,7 +26,7 @@ func (ctrl *ServerController) GetRecognition(c *gin.Context) {
 }
 
 func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
-	if ctrl.Main.Clock {
+	if ctrl.Main.Timer.AllowSend {
 		voice := Voice{}
 
 		err := c.ShouldBind(&voice)
@@ -55,7 +55,10 @@ func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
 				}
 
 				ctrl.Main.VChs.Ch <- fileNames[randNum]
-				ctrl.Main.Clock = false
+
+				ctrl.Main.Timer.Lock.Lock()
+				ctrl.Main.Timer.AllowSend = false
+				ctrl.Main.Timer.Lock.Unlock()
 				break
 			}
 		}
