@@ -33,7 +33,7 @@ func (ctrl *ServerController) GetRecognition(c *gin.Context) {
 }
 
 func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
-	if ctrl.Timer.AllowSend {
+	if ctrl.Timer.AllowSend && ctrl.Main.VChs.Condition {
 		voice := Voice{}
 
 		err := c.ShouldBind(&voice)
