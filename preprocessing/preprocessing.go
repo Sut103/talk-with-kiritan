@@ -2,6 +2,7 @@ package preprocessing
 
 import (
 	"strings"
+	"unicode/utf8"
 
 	"github.com/shogo82148/go-mecab"
 )
@@ -54,28 +55,24 @@ func GetKeys(fileName string) ([]string, error) {
 }
 
 func (t TaggerNode) allowAdd() bool {
+	reject := t.Surface == "っ" ||
+		t.PartsOfSpeech == "記号" ||
+		t.PartsOfSpeech == "助詞" ||
+		t.PartsOfSpeech == "助動詞" ||
+		t.PartsOfSpeech == "フィラー" ||
+		t.PartsOfSpeech == "連体詞" ||
+		t.PartsOfSpeech == "名詞" && t.Subcategory1 == "非自立" ||
+		t.PartsOfSpeech == "接頭詞" && t.Subcategory1 == "名詞接続" ||
+		t.PartsOfSpeech == "感動詞" && utf8.RuneCountInString(t.Origin) < 2 ||
+		t.Subcategory1 == "代名詞" ||
+		t.Subcategory1 == "非自立" && t.Pratical == "連用形" ||
+		t.Subcategory1 == "接尾" && t.Subcategory2 == "人名" ||
+		t.Utilization == "五段・カ行促音便" ||
+		t.Utilization == "サ変・スル" ||
+		t.Origin == "*" ||
+		t.Pratical == "文語基本形" && t.PartsOfSpeech != "形容詞"
 
-	if t.PartsOfSpeech == "記号" {
-		return false
-	}
-
-	if t.PartsOfSpeech == "助動詞" {
-		return false
-	}
-
-	if t.PartsOfSpeech == "助詞" {
-		return false
-	}
-
-	if t.PartsOfSpeech == "接頭詞" {
-		return false
-	}
-
-	if t.Origin == "*" {
-		return false
-	}
-
-	return true
+	return !reject
 }
 
 func (t TaggerNode) getOrigin() string {
