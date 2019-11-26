@@ -36,11 +36,19 @@ func (ctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discor
 			//音声ファイルのリクエスト受付を開始
 			go playAudioLoop(s, ctrl)
 
+			ctrl.Main.VChs.Lock.Lock()
+			ctrl.Main.VChs.Condition = true //音声ファイル名の送信を許可
+			ctrl.Main.VChs.Lock.Unlock()
+
 		}
 	}
 
 	//VC退出
 	if event.Content == "おつかれさまです" {
+		ctrl.Main.VChs.Lock.Lock()
+		ctrl.Main.VChs.Condition = false //音声ファイル名の送信を遮断
+		ctrl.Main.VChs.Lock.Unlock()
+
 		s.ChannelMessageSend(discordChannel.ID, "それでは")
 		if err := ctrl.VC.Disconnect(); err != nil {
 			panic(err)
