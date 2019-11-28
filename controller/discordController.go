@@ -27,10 +27,12 @@ func (ctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discor
 		for _, vs := range discordGuild.VoiceStates {
 			if vs.UserID == event.Author.ID {
 				ctrl.VC, err = s.ChannelVoiceJoin(discordGuild.ID, vs.ChannelID, false, true)
+				if err != nil {
+					panic(err)
+				}
 			}
-			if err != nil {
-				panic(err)
-			}
+		}
+		if ctrl.VC != nil {
 			s.ChannelMessageSend(discordChannel.ID, "きりたん砲の味噌となれっ!!")
 
 			//音声ファイルのリクエスト受付を開始
@@ -39,7 +41,6 @@ func (ctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discor
 			ctrl.Main.VChs.Lock.Lock()
 			ctrl.Main.VChs.Condition = true //音声ファイル名の送信を許可
 			ctrl.Main.VChs.Lock.Unlock()
-
 		}
 	}
 
