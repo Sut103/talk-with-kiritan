@@ -15,7 +15,7 @@ import (
 func InitMainRouter(config config.Config) (*discordgo.Session, *gin.Engine, error) {
 	ctrl := controller.GetMainController()
 
-	loadedFiles, err := loadAudioFiles(config)
+	loadedFiles, err := loadAudioFiles(config.Server)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -25,13 +25,13 @@ func InitMainRouter(config config.Config) (*discordgo.Session, *gin.Engine, erro
 		return nil, nil, err
 	}
 
-	g := InitServerRouter(loadedFiles, ctrl)
+	g := InitServerRouter(config.Server, loadedFiles, ctrl)
 
 	return dg, g, err
 }
 
-func loadAudioFiles(config config.Config) (map[string][]string, error) {
-	extension := ".wav"
+func loadAudioFiles(config config.Server) (map[string][]string, error) {
+	extension := config.AudioFileExtension
 	loadedFiles := map[string][]string{}
 
 	fmt.Println("Loading sound file ...")
