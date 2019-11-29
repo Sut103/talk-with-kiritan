@@ -1,5 +1,16 @@
 {
-    "session":{
-        "token":"bot token"
+    "discord":{
+        "bot_token":"BOT TOKEN",
+        "order_message_join":"run",
+        "order_message_leave":"stop",
+        "message_join":"join",
+        "message_leave":"leave"
+    },
+    "server":{
+        "audio_file_extension":".wav",
+        "idle":45,
+        "users":[
+            {"user":"user","pass":"pass"}
+        ]
     }
 }
