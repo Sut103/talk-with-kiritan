@@ -3,12 +3,14 @@ package controller
 import (
 	"github.com/bwmarrin/dgvoice"
 	"github.com/bwmarrin/discordgo"
+	"talk-with-kiritan/config"
 )
 
 type DiscordController struct {
-	VC    *discordgo.VoiceConnection
-	Main  *MainController
-	close chan bool
+	VC     *discordgo.VoiceConnection
+	Main   *MainController
+	close  chan bool
+	Config config.Discord
 }
 
 func (ctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discordgo.MessageCreate) {
@@ -23,7 +25,7 @@ func (ctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discor
 	}
 
 	//VC参加
-	if event.Content == "きりたん砲全門斉射！" {
+	if event.Content == ctrl.Config.OrderMessageJoin {
 		for _, vs := range discordGuild.VoiceStates {
 			if vs.UserID == event.Author.ID {
 				ctrl.VC, err = s.ChannelVoiceJoin(discordGuild.ID, vs.ChannelID, false, true)
@@ -33,7 +35,7 @@ func (ctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discor
 			}
 		}
 		if ctrl.VC != nil {
-			s.ChannelMessageSend(discordChannel.ID, "きりたん砲の味噌となれっ!!")
+			s.ChannelMessageSend(discordChannel.ID, ctrl.Config.MessageJoin)
 
 			//音声ファイルのリクエスト受付を開始
 			go playAudioLoop(s, ctrl)
@@ -45,12 +47,12 @@ func (ctrl *DiscordController) MessageRecive(s *discordgo.Session, event *discor
 	}
 
 	//VC退出
-	if event.Content == "おつかれさまです" {
+	if event.Content == ctrl.Config.OrderMessageLeave {
 		ctrl.Main.VChs.Lock.Lock()
 		ctrl.Main.VChs.Condition = false //音声ファイル名の送信を遮断
 		ctrl.Main.VChs.Lock.Unlock()
 
-		s.ChannelMessageSend(discordChannel.ID, "それでは")
+		s.ChannelMessageSend(discordChannel.ID, ctrl.Config.MessageLeave)
 		if err := ctrl.VC.Disconnect(); err != nil {
 			panic(err)
 		}
