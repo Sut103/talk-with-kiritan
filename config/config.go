@@ -15,6 +15,8 @@ type Discord struct {
 	OrderMessageLeave string `json:"order_message_leave"`
 	MessageJoin       string `json:"message_join"`
 	MessageLeave      string `json:"message_leave"`
+	AudioFileJoin     string `json:"audio_file_join"`
+	AudioFileLeave    string `json:"audio_file_leave"`
 }
 type Users struct {
 	User string `json:"user"`

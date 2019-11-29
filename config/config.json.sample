@@ -4,7 +4,10 @@
         "order_message_join":"run",
         "order_message_leave":"stop",
         "message_join":"join",
-        "message_leave":"leave"
+        "message_leave":"leave",
+        "audio_file_join":"",
+        "audio_file_leave":""
+
     },
     "server":{
         "audio_file_extension":".wav",
