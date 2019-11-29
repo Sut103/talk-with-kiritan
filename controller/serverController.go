@@ -33,10 +33,19 @@ type ResponseVoiceText struct {
 	Morpheme string `json:"morpheme"`
 	FileName string `json:"file_name"`
 }
+
+type ResponseFileNames struct {
+	Names []string `json:"names"`
+}
+
 func (ctrl *ServerController) GetRecognition(c *gin.Context) {
 	c.HTML(http.StatusOK, "recognition.html", nil)
 }
 
+func (ctrl *ServerController) GetFileNames(c *gin.Context) {
+	res := ResponseFileNames{ctrl.LoadedFiles}
+	c.JSON(http.StatusOK, res)
+}
 
 func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
 	voice := Voice{}
