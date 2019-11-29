@@ -5,8 +5,8 @@
         "order_message_leave":"stop",
         "message_join":"join",
         "message_leave":"leave",
-        "audio_file_join":"join.wav",
-        "audio_file_leave":"leave.wav"
+        "audio_file_join":"",
+        "audio_file_leave":""
 
     },
     "server":{
