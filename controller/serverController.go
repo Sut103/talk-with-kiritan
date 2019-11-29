@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"math/rand"
 	"net/http"
 	"sort"
@@ -14,9 +13,10 @@ import (
 )
 
 type ServerController struct {
-	Main        *MainController
-	LoadedFiles map[string][]string
-	Timer       Timer
+	Main            *MainController
+	LoadedFiles     []string
+	ParsedFileNames map[string][]string
+	Timer           Timer
 }
 
 type Timer struct {
@@ -37,14 +37,13 @@ func (ctrl *ServerController) GetRecognition(c *gin.Context) {
 	c.HTML(http.StatusOK, "recognition.html", nil)
 }
 
-func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
-	if ctrl.Timer.AllowSend && ctrl.Main.VChs.Condition {
-		voice := Voice{}
 
-		err := c.ShouldBind(&voice)
-		if err != nil {
-			panic(err)
-		}
+func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
+	voice := Voice{}
+	err := c.ShouldBind(&voice)
+	if err != nil {
+		panic(err)
+	}
 
 	res := ResponseVoiceText{Input: voice.Text}
 	if ctrl.Timer.AllowSend && ctrl.Main.VChs.Condition {
