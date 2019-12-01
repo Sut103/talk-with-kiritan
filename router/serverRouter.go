@@ -34,7 +34,7 @@ func InitServerRouter(config config.Server, loadedFiles []string, mctrl *control
 	root := auth.Group("/")
 	{
 		root.GET("/recognition", ctrl.GetRecognition)
-		root.GET("/filenames", ctrl.GetFileNames)
+		//root.GET("/filenames", ctrl.GetFileNames)
 		root.POST("/postVoiceText", ctrl.PostVoiceText)
 	}
 
