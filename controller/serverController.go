@@ -39,13 +39,13 @@ type ResponseFileNames struct {
 }
 
 func (ctrl *ServerController) GetRecognition(c *gin.Context) {
-	c.HTML(http.StatusOK, "recognition.html", nil)
+	c.HTML(http.StatusOK, "recognition.html", gin.H{"list": ctrl.LoadedFiles})
 }
 
-func (ctrl *ServerController) GetFileNames(c *gin.Context) {
-	res := ResponseFileNames{ctrl.LoadedFiles}
-	c.JSON(http.StatusOK, res)
-}
+// func (ctrl *ServerController) GetFileNames(c *gin.Context) {
+// 	res := ResponseFileNames{ctrl.LoadedFiles}
+// 	c.JSON(http.StatusOK, res)
+// }
 
 func (ctrl *ServerController) PostVoiceText(c *gin.Context) {
 	voice := Voice{}

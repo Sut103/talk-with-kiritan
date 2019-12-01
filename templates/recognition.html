@@ -1,33 +1,93 @@
 <!DOCTYPE html>
 <html>
-    <head lang="jp">
-        <meta charset="utf-8">
-        <title>talk-with-kiritan</title>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    </head>
 
-    <body>
-        <p>●録音中</p>
-        <style>
-            p{
-                color: red;
-                text-align: center;
+<head lang="jp">
+    <meta charset="utf-8">
+    <title>talk-with-kiritan</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <h1>Talk-with-Kiritan</h1>
+    <div class="columns">
+        <div class="list column">
+            <h2>AudioFiles</h2>
+            <div class="scroll">
+                {{range .list}}
+                <p>{{.}}</p>
+                {{end}}
+            </div>
+        </div>
+        <div class="log column">
+            <h2>MatchLogs</h2>
+            <div class="scroll" id="log">
+            </div>
+        </div>
+    </div>
+
+    <style>
+        html,
+        body {
+            margin-top:0;
+            height: 90%;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        p {
+            font-size: 20px;
+            border: 2px solid gray;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .scroll {
+            height: 85%;
+            overflow: scroll;
+        }
+
+        .columns{
+            height: 100%;
+        }
+
+        .column {
+            width: 100%;
+            height: 50%;
+        }
+
+        @media screen and (min-width: 1000px) {
+            .column {
+                width: 50%;
+                height: 100%;
+                float: left;
             }
-        </style>
-        <script>
-            const recognition = new webkitSpeechRecognition()
-            recognition.lang="ja-JP"
+        }
+    </style>
+
+    <script>
+        const log = document.getElementById("log")
+        const recognition = new webkitSpeechRecognition()
+        recognition.lang = "ja-JP"
+        recognition.start()
+        recognition.onend = function (event) {
             recognition.start()
-            recognition.onend = function(event){
-                recognition.start()
-            }
-            recognition.onresult = function(event){
-                let recognitionendVoice=event.results[0][0].transcript
-                console.log(recognitionendVoice)
-                axios.post("/postVoiceText",{
-                    text:recognitionendVoice
-                })
-            }
-        </script>
-    </body>
+        }
+        recognition.onresult = function (event) {
+            let recognitionendVoice = event.results[0][0].transcript
+            console.log(recognitionendVoice)
+            axios.post("/postVoiceText", {
+                text: recognitionendVoice
+            }).then(function (res) {
+                const data = res.data
+                if (data.file_name !== "") {
+                    const result = "「" + data.input + "」 ---> 「" + data.morpheme + "」 ---> 「" + data.file_name + "」"
+                    log.insertAdjacentHTML("afterbegin", "<p>" + result + "</p>")
+                }
+            })
+        }
+    </script>
+</body>
+
 </html>
