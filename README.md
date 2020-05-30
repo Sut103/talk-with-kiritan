@@ -15,15 +15,15 @@ Discordのボイスチャットに東北きりたんが参加してる風に演�
     * 再生したい音声ファイル.wav
 
 ## 使い方
-1. Discordで事前にBotを登録し、config.jsonにトークンを書いておく
+1. Discordで事前にBotを登録し、config.jsonにトークンを書いておく(その他設定も書いておく)
 2. ./soundsに音声ファイルを入れておく
 3. ```$ go run main.go```で起動
     * あるいはDockerfileでbuild＆run
 4. DiscordでVCに入る
-5. チャットにきりたん砲全門斉射！と書く
+5. message_joinの設定値をチャットに書く
     * Botが入ってくる
 6. http://localhost:8080/recognition で音声認識
     * ファイル名(記号や拡張子は除く)をしゃべってみる
     * 適切な単語が入るとBotが対応する音声ファイルを再生する
-7. チャットにおつかれさまですと書く
+7. message_leaveの設定値をチャットに書く
     * Botが出ていく
